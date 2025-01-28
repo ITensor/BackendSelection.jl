@@ -1,59 +1,72 @@
-for type in (:Algorithm, :Backend)
-  @eval begin
-    """
-        $($type)
+macro generate_backend_type(type::Symbol)
+  return generate_backend_type_expr(type)
+end
 
-    A type representing a backend for a function.
+function generate_backend_type_expr(type::Symbol)
+  return esc(
+    quote
+      """
+          $($type)
 
-    For example, a function might have multiple backends
-    implementations, which internally are selected with a `$($type)` type.
+      A type representing a backend for a function.
 
-    This allows users to extend functionality with a new implementation but
-    use the same interface.
-    """
-    struct $type{Back,Kwargs<:NamedTuple} <: AbstractBackend
-      kwargs::Kwargs
-    end
+      For example, a function might have multiple backends
+      implementations, which internally are selected with a `$($type)` type.
 
-    $type{Back}(kwargs::NamedTuple) where {Back} = $type{Back,typeof(kwargs)}(kwargs)
-    $type{Back}(; kwargs...) where {Back} = $type{Back}(NamedTuple(kwargs))
-    $type(s; kwargs...) = $type{Symbol(s)}(NamedTuple(kwargs))
+      This allows users to extend functionality with a new implementation but
+      use the same interface.
+      """
+      struct $type{Back,Kwargs<:NamedTuple} <: AbstractBackend
+        kwargs::Kwargs
+      end
 
-    $type(backend::$type) = backend
+      $type{Back}(kwargs::NamedTuple) where {Back} = $type{Back,typeof(kwargs)}(kwargs)
+      $type{Back}(; kwargs...) where {Back} = $type{Back}(NamedTuple(kwargs))
+      $type(s; kwargs...) = $type{Symbol(s)}(NamedTuple(kwargs))
 
-    # TODO: Use `SetParameters`.
-    backend_string(::$type{Back}) where {Back} = string(Back)
-    parameters(backend::$type) = getfield(backend, :kwargs)
+      $type(backend::$type) = backend
 
-    Base.getproperty(backend::$type, name::Symbol) = parameters(backend)[name]
-    Base.propertynames(backend::$type) = propertynames(parameters(backend))
+      # TODO: Use `SetParameters`.
+      backend_string(::$type{Back}) where {Back} = string(Back)
+      parameters(backend::$type) = getfield(backend, :kwargs)
 
-    function Base.show(io::IO, backend::$type)
-      return print(io, "$($type) type ", backend_string(backend), ", ", parameters(backend))
-    end
-    Base.print(io::IO, backend::$type) =
-      print(io, backend_string(backend), ", ", parameters(backend))
-  end
+      Base.getproperty(backend::$type, name::Symbol) = parameters(backend)[name]
+      Base.propertynames(backend::$type) = propertynames(parameters(backend))
+
+      function Base.show(io::IO, backend::$type)
+        return print(
+          io, "$($type) type ", backend_string(backend), ", ", parameters(backend)
+        )
+      end
+      function Base.print(io::IO, backend::$type)
+        return print(io, backend_string(backend), ", ", parameters(backend))
+      end
+    end,
+  )
+end
+
+@generate_backend_type Algorithm
+@generate_backend_type Backend
+
+function backend_macro_docstring(backend)
+  return """
+      @$(backend)_str
+
+  A convenience macro for writing [`$backend`](@ref) types, typically used when
+  adding methods to a function that supports multiple backends.
+  """
 end
 
 # TODO: See if these can be moved inside of `@eval`.
 """
-    @Algorithm_str
-
-A convenience macro for writing [`Algorithm`](@ref) types, typically used when
-adding methods to a function that supports multiple algorithm
-backends.
+$(backend_macro_docstring(:Algorithm))
 """
 macro Algorithm_str(s)
   return :(Algorithm{$(Expr(:quote, Symbol(s)))})
 end
 
 """
-    @Backend_str
-
-A convenience macro for writing [`Backend`](@ref) types, typically used when
-adding methods to a function that supports multiple
-backends.
+$(backend_macro_docstring(:Backend))
 """
 macro Backend_str(s)
   return :(Backend{$(Expr(:quote, Symbol(s)))})

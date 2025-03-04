@@ -6,7 +6,8 @@ Suppressor = "fd094767-a336-5f1f-9728-57cf17d0bbfb"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-Aqua = "0.8.9"
+Aqua = "0.8"
+BackendSelection = "0.1"
 SafeTestsets = "0.1"
 Suppressor = "0.2"
-Test = "1.10"
+Test = "1"

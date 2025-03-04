@@ -1,2 +1,5 @@
 [deps]
 BackendSelection = "680c2d7c-f67a-4cc9-ae9c-da132b1447a5"
+
+[compat]
+BackendSelection = "0.1"

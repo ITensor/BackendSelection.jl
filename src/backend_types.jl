@@ -30,8 +30,13 @@ function generate_backend_type_expr(type::Symbol)
       backend_string(::$type{Back}) where {Back} = string(Back)
       parameters(backend::$type) = getfield(backend, :kwargs)
 
+      # NamedTuple interface functions.
       Base.getproperty(backend::$type, name::Symbol) = parameters(backend)[name]
       Base.propertynames(backend::$type) = propertynames(parameters(backend))
+      Base.getindex(backend::$type, name::Symbol) = parameters(backend)[name]
+      function Base.get(backend::$type, name::Symbol, default)
+        get(parameters(backend), name, default)
+      end
 
       function Base.show(io::IO, backend::$type)
         return print(

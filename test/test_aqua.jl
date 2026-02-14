@@ -1,5 +1,5 @@
-using BackendSelection: BackendSelection
 using Aqua: Aqua
+using BackendSelection: BackendSelection
 using Test: @testset
 
 @testset "Code quality (Aqua.jl)" begin

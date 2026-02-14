@@ -28,7 +28,9 @@ using TestExtras: @constinferred
         end
     end
     # Macro syntax.
-    @test @constinferred(Algorithm"backend"(; x = 2, y = 3)) === Algorithm("backend"; x = 2, y = 3)
-    @test @constinferred(Backend"backend"(; x = 2, y = 3)) === Backend("backend"; x = 2, y = 3)
+    @test @constinferred(Algorithm"backend"(; x = 2, y = 3)) ===
+        Algorithm("backend"; x = 2, y = 3)
+    @test @constinferred(Backend"backend"(; x = 2, y = 3)) ===
+        Backend("backend"; x = 2, y = 3)
     @test isnothing(show(Algorithm("")))
 end

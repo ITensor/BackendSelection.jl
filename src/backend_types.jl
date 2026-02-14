@@ -20,7 +20,9 @@ function generate_backend_type_expr(type::Symbol)
                 kwargs::Kwargs
             end
 
-            $type{Back}(kwargs::NamedTuple) where {Back} = $type{Back, typeof(kwargs)}(kwargs)
+            function $type{Back}(kwargs::NamedTuple) where {Back}
+                return $type{Back, typeof(kwargs)}(kwargs)
+            end
             $type{Back}(; kwargs...) where {Back} = $type{Back}(NamedTuple(kwargs))
             $type(s; kwargs...) = $type{Symbol(s)}(NamedTuple(kwargs))
 
@@ -40,13 +42,15 @@ function generate_backend_type_expr(type::Symbol)
 
             function Base.show(io::IO, backend::$type)
                 return print(
-                    io, "$($type) type ", backend_string(backend), ", ", parameters(backend)
+                    io, "$($type) type ", backend_string(backend), ", ", parameters(
+                        backend
+                    )
                 )
             end
             function Base.print(io::IO, backend::$type)
                 return print(io, backend_string(backend), ", ", parameters(backend))
             end
-        end,
+        end
     )
 end
 

@@ -1,6 +1,6 @@
 name = "BackendSelection"
 uuid = "680c2d7c-f67a-4cc9-ae9c-da132b1447a5"
-version = "0.1.10"
+version = "0.1.11"
 authors = ["ITensor developers <support@itensor.org> and contributors"]
 
 [compat]

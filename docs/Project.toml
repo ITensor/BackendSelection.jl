@@ -1,9 +1,12 @@
 [deps]
-BackendSelection = "680c2d7c-f67a-4cc9-ae9c-da132b1447a5"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 Literate = "98b081ad-f1c9-55d3-8b20-4c87d4299306"
+BackendSelection = "680c2d7c-f67a-4cc9-ae9c-da132b1447a5"
 
 [compat]
-BackendSelection = "0.1"
 Documenter = "1"
 Literate = "2"
+BackendSelection = "0.1"
+
+[sources.BackendSelection]
+path = ".."

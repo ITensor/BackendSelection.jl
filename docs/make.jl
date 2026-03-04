@@ -1,11 +1,12 @@
 using BackendSelection: BackendSelection
 using Documenter: Documenter, DocMeta, deploydocs, makedocs
+using ITensorFormatter: ITensorFormatter
 
 DocMeta.setdocmeta!(
     BackendSelection, :DocTestSetup, :(using BackendSelection); recursive = true
 )
 
-include("make_index.jl")
+ITensorFormatter.make_index!(pkgdir(BackendSelection))
 
 makedocs(;
     modules = [BackendSelection],
